@@ -10,7 +10,7 @@ using namespace std;
 
 int main(int argc, char* argv[], char* envp[])
 {
-    // 1) Otwórz TS
+    // 1) Otwórz plik MPEG-TS w trybie binarnym
     ifstream tsFile("example_new.ts", ios::binary);
     if (!tsFile) {
         cerr << "Nie mozna otworzyc pliku example_new.ts\n";
@@ -33,7 +33,7 @@ int main(int argc, char* argv[], char* envp[])
     }
 
     int32_t TS_PacketId = 0;
-    const int32_t maxPackets = 10000000;  // d³ugoœc ile przetwarzam
+    const int32_t maxPackets = 1000000;  // d³ugoœc ile przetwarzam
 
     while (tsFile.read(reinterpret_cast<char*>(TS_PacketBuffer), TS_PACKET_SIZE)) {
         // a) parsuj nag³ówek TS
@@ -90,8 +90,9 @@ int main(int argc, char* argv[], char* envp[])
                 totalBytes, headerLen, payloadLen);
 
             if (payloadLen > 0) {
-                // zapisz sam payload (bez nag³ówka) do pliku .mp2
-                fwrite(PES_Assembler.getPacket() + headerLen, 1, payloadLen, out);
+                
+                //fwrite(PES_Assembler.getPacket() + headerLen, 1, payloadLen, out);  zapis sam payload (bez nag³ówka) do pliku .mp2
+                fwrite(PES_Assembler.getPacket(), 1, totalBytes, out);                 // zapis z nag³ówkiem do pliku .mp2
             }
         }
         break;
